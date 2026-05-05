@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyQuest — Currículo por Temáticas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#0b0f0a;
+  --ink:#f0ece0;
+  --ink2:#9aa592;
+  --ink3:#4a5248;
+  --g:#3a9400;
+  --gl:#5ec44e;
+  --gd:#1e5000;
+  --o:#e85000;
+  --ol:#ff7a40;
+  --au:#c09010;
+  --aul:#e8c040;
+  --bl:#2060b0;
+  --bll:#4090f0;
+  --card:#111710;
+  --brd:#1e2a1c;
+  --mono:'Fira Code',monospace;
+  --display:'Bebas Neue',sans-serif;
+  --serif:'DM Serif Display',serif;
+  --body:'Barlow',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);overflow-x:hidden}
+
+/* ── SLIDES ── */
+.slide{
+  min-height:100vh;
+  
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:5vh 6vw;
+}
+
+/* ── NAV DOTS ── */
+.nav-dots{
+  position:fixed;
+  right:28px;top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:10px;
+  z-index:999;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--brd);border:1px solid var(--ink3);
+  cursor:pointer;transition:all .25s;
+}
+.dot.active{background:var(--gl);border-color:var(--gl);transform:scale(1.4)}
+.dot:hover{background:var(--ink2)}
+
+/* ── SLIDE COUNTER ── */
+.slide-counter{
+  position:fixed;bottom:28px;right:36px;
+  font-family:var(--mono);font-size:11px;color:var(--ink3);
+  z-index:999;letter-spacing:2px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes scanline{from{transform:translateY(-100%)}to{transform:translateY(100vh)}}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0)}
+  33%{transform:translateY(-20px) translateX(10px)}
+  66%{transform:translateY(10px) translateX(-15px)}
+  100%{transform:translateY(0) translateX(0)}
+}
+@keyframes barFill{from{width:0}to{width:var(--w)}}
+@keyframes rotSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.slide.visible .anim-1{animation:fadeUp .7s ease both}
+.slide.visible .anim-2{animation:fadeUp .7s .12s ease both}
+.slide.visible .anim-3{animation:fadeUp .7s .24s ease both}
+.slide.visible .anim-4{animation:fadeUp .7s .36s ease both}
+.slide.visible .anim-5{animation:fadeUp .7s .48s ease both}
+.slide.visible .anim-fade{animation:fadeIn .9s ease both}
+.slide.visible .anim-right{animation:slideRight .7s ease both}
+.slide.visible .anim-scale{animation:scaleIn .6s ease both}
+
+/* ── REUSABLE COMPONENTS ── */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gl);
+  display:flex;align-items:center;gap:12px;margin-bottom:1rem;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gl)}
+.slide-num{
+  font-family:var(--mono);font-size:10px;letter-spacing:3px;
+  color:var(--ink3);position:absolute;top:32px;left:6vw;
+}
+.big-title{
+  font-family:var(--display);
+  font-size:clamp(3.5rem,8vw,7rem);
+  line-height:.95;letter-spacing:2px;
+  color:var(--ink);
+}
+.big-title em{color:var(--gl);font-style:normal}
+.section-title{
+  font-family:var(--serif);
+  font-size:clamp(2rem,4.5vw,3.5rem);
+  line-height:1.15;color:var(--ink);
+  margin-bottom:1.5rem;
+}
+.section-title em{color:var(--gl);font-style:italic}
+.body-text{
+  font-size:1rem;line-height:1.8;
+  color:var(--ink2);max-width:600px;
+}
+.mono-label{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:.5rem;
+}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  padding:3px 10px;border-radius:2px;border:1px solid;margin:2px;
+}
+.tag-g{color:var(--gl);border-color:rgba(94,196,78,.3);background:rgba(94,196,78,.08)}
+.tag-o{color:var(--ol);border-color:rgba(255,122,64,.3);background:rgba(255,122,64,.08)}
+.tag-a{color:var(--aul);border-color:rgba(232,192,64,.3);background:rgba(232,192,64,.08)}
+.tag-b{color:var(--bll);border-color:rgba(64,144,240,.3);background:rgba(64,144,240,.08)}
+
+/* ── BG EFFECTS ── */
+.bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(58,148,0,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(58,148,0,.05) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+.bg-glow{
+  position:absolute;border-radius:50%;
+  pointer-events:none;
+  filter:blur(80px);
+}
+.bg-code{
+  position:absolute;right:0;top:0;bottom:0;width:45%;
+  overflow:hidden;pointer-events:none;opacity:.06;
+}
+.bg-code-text{
+  font-family:var(--mono);font-size:12px;
+  color:var(--gl);line-height:1.9;
+  white-space:pre;padding:2rem;
+  animation:fadeIn 2s ease;
+}
+
+/* ══════════════════════════════════
+   SLIDE 0 — PORTADA
+══════════════════════════════════ */
+#s0{background:var(--bg);justify-content:flex-end;padding-bottom:8vh}
+#s0 .bg-glow.g1{width:500px;height:500px;background:rgba(58,148,0,.12);top:-100px;left:-50px}
+#s0 .bg-glow.g2{width:300px;height:300px;background:rgba(232,128,0,.07);bottom:-80px;right:10%}
+#s0 .hero-vert{
+  display:flex;flex-direction:column;gap:0;
+  padding-bottom:2rem;border-bottom:1px solid var(--brd);
+}
+#s0 .sena-bar{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--g) 0%,var(--o) 100%)
+}
+#s0 .terminal-block{
+  position:absolute;right:6vw;top:50%;transform:translateY(-50%);
+  width:min(380px,40vw);
+  background:#080c07;border:1px solid var(--brd);border-radius:6px;
+  overflow:hidden;
+}
+#s0 .term-bar{
+  background:#111710;padding:10px 14px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:8px;
+}
+#s0 .term-dot{width:10px;height:10px;border-radius:50%}
+#s0 .term-title{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-left:auto;letter-spacing:1px}
+#s0 .term-body{padding:1.4rem;font-family:var(--mono);font-size:12px;line-height:1.9}
+#s0 .tc{color:var(--ink3)} /* comment */
+#s0 .tv{color:#7acca0}     /* variable */
+#s0 .ts{color:#9ec870}     /* string */
+#s0 .tn{color:var(--aul)}  /* number */
+#s0 .tk{color:#78b4e0}     /* keyword */
+#s0 .tf{color:var(--ol)}   /* function */
+#s0 .cursor{
+  display:inline-block;width:7px;height:13px;
+  background:var(--gl);vertical-align:text-bottom;
+  animation:blink 1s step-end infinite;
+}
+
+/* ══════════════════════════════════
+   SLIDE 1 — CONTEXTO
+══════════════════════════════════ */
+#s1{background:#0c1008}
+#s1 .grid-2{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+}
+#s1 .context-card{
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;padding:1.5rem;
+  border-top:2px solid var(--gl);
+}
+#s1 .ctx-num{
+  font-family:var(--display);font-size:3.5rem;
+  color:var(--gl);line-height:1;margin-bottom:.3rem;
+}
+#s1 .ctx-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px}
+#s1 .ctx-desc{font-size:13px;color:var(--ink2);margin-top:.5rem;line-height:1.5}
+
+/* ══════════════════════════════════
+   SLIDE 2 — OBJETIVO GENERAL
+══════════════════════════════════ */
+#s2{background:#0e1a0c}
+#s2 .obj-frame{
+  border:1px solid rgba(94,196,78,.2);
+  border-left:4px solid var(--gl);
+  border-radius:0 6px 6px 0;
+  padding:2.5rem 3rem;
+  max-width:800px;
+  background:rgba(94,196,78,.03);
+  position:relative;
+}
+#s2 .obj-quote{
+  position:absolute;top:-24px;left:32px;
+  font-family:var(--serif);font-size:80px;
+  color:var(--gd);line-height:1;
+}
+#s2 .obj-text{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.1rem,2vw,1.45rem);
+  line-height:1.75;color:var(--ink);
+}
+#s2 .obj-text strong{font-style:normal;color:var(--gl)}
+#s2 .oes{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1rem;margin-top:3rem;
+}
+#s2 .oe{
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;padding:1.1rem 1.3rem;
+  display:flex;gap:1rem;align-items:flex-start;
+}
+#s2 .oe-n{
+  font-family:var(--mono);font-size:10px;color:var(--gl);
+  background:rgba(94,196,78,.1);border:1px solid rgba(94,196,78,.2);
+  padding:3px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:2px;
+}
+#s2 .oe-t{font-size:13.5px;color:var(--ink2);line-height:1.5}
+
+/* ══════════════════════════════════
+   SLIDE 3 — ESTRUCTURA 4 SESIONES
+══════════════════════════════════ */
+#s3{background:#0b0f0a}
+#s3 .ses-track{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;margin-top:2.5rem;
+}
+#s3 .ses-card{
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;padding:1.6rem 1.3rem;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+#s3 .ses-card:hover{border-color:var(--ink3)}
+#s3 .ses-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+#s3 .c1::before{background:var(--g)}
+#s3 .c2::before{background:var(--o)}
+#s3 .c3::before{background:var(--au)}
+#s3 .c4::before{background:var(--bl)}
+#s3 .ses-big{
+  font-family:var(--display);font-size:5rem;
+  line-height:1;margin-bottom:.5rem;opacity:.12;
+  position:absolute;bottom:0;right:12px;
+}
+#s3 .c1 .ses-big{color:var(--g)}
+#s3 .c2 .ses-big{color:var(--o)}
+#s3 .c3 .ses-big{color:var(--au)}
+#s3 .c4 .ses-big{color:var(--bl)}
+#s3 .ses-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;margin-bottom:.6rem}
+#s3 .c1 .ses-num{color:var(--gl)} #s3 .c2 .ses-num{color:var(--ol)}
+#s3 .c3 .ses-num{color:var(--aul)} #s3 .c4 .ses-num{color:var(--bll)}
+#s3 .ses-title{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink);margin-bottom:1rem;line-height:1.4}
+#s3 .ses-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+#s3 .ses-items li{font-size:11.5px;color:var(--ink3);font-family:var(--mono)}
+
+/* ══════════════════════════════════
+   SLIDE 4 — COMPETENCIA
+══════════════════════════════════ */
+#s4{background:#080c14}
+#s4 .bg-glow.g1{width:600px;height:400px;background:rgba(32,96,176,.1);top:-100px;right:-100px}
+#s4 .comp-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:1.5rem;margin-top:2rem;
+}
+#s4 .saber-card{
+  background:#0a0e18;border:1px solid #1a2030;
+  border-radius:4px;padding:1.4rem;
+}
+#s4 .saber-card.ser{border-top:2px solid var(--g)}
+#s4 .saber-card.conocer{border-top:2px solid var(--bll)}
+#s4 .saber-card.hacer{border-top:2px solid var(--aul)}
+#s4 .saber-label{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:.9rem;
+}
+#s4 .saber-card.ser .saber-label{color:var(--gl)}
+#s4 .saber-card.conocer .saber-label{color:var(--bll)}
+#s4 .saber-card.hacer .saber-label{color:var(--aul)}
+#s4 .saber-list{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+#s4 .saber-list li{
+  font-size:12.5px;color:#6a7880;line-height:1.5;
+  display:flex;gap:8px;align-items:flex-start;
+}
+#s4 .saber-list li::before{font-family:var(--mono);font-size:10px;flex-shrink:0;margin-top:2px}
+#s4 .saber-card.ser .saber-list li::before{content:'›';color:var(--gl)}
+#s4 .saber-card.conocer .saber-list li::before{content:'›';color:var(--bll)}
+#s4 .saber-card.hacer .saber-list li::before{content:'›';color:var(--aul)}
+#s4 .comp-statement{
+  background:#0a0e18;border-left:3px solid var(--bll);
+  padding:1.5rem 2rem;margin-bottom:2rem;border-radius:0 4px 4px 0;
+  max-width:750px;
+}
+#s4 .comp-statement p{font-size:1rem;line-height:1.8;color:#8090a8;font-style:italic}
+#s4 .comp-statement strong{color:#c0d0e8;font-style:normal}
+
+/* ══════════════════════════════════
+   SLIDE 5 — GAMIFICACIÓN
+══════════════════════════════════ */
+#s5{background:#0d1000}
+#s5 .gamif-wrap{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;
+}
+#s5 .xp-table{
+  display:flex;flex-direction:column;gap:.4rem;margin-top:1.5rem;
+}
+#s5 .xp-row{
+  display:flex;align-items:center;gap:1rem;
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:3px;padding:.7rem 1rem;
+}
+#s5 .xp-ses{font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:24px}
+#s5 .xp-bar-wrap{flex:1;height:6px;background:#1a2018;border-radius:3px;overflow:hidden}
+#s5 .xp-bar{height:100%;border-radius:3px;animation:barFill 1.2s ease forwards}
+#s5 .xp-val{font-family:var(--mono);font-size:11px;min-width:50px;text-align:right}
+.xp-row.r1 .xp-bar{--w:25%;background:var(--g)} .xp-row.r1 .xp-val{color:var(--gl)}
+.xp-row.r2 .xp-bar{--w:46%;background:var(--o)} .xp-row.r2 .xp-val{color:var(--ol)}
+.xp-row.r3 .xp-bar{--w:67%;background:var(--au)} .xp-row.r3 .xp-val{color:var(--aul)}
+.xp-row.r4 .xp-bar{--w:100%;background:var(--bl)} .xp-row.r4 .xp-val{color:var(--bll)}
+#s5 .badges{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+#s5 .badge-item{
+  display:flex;align-items:center;gap:1.2rem;
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;padding:1rem 1.2rem;
+}
+#s5 .badge-icon{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+#s5 .badge-icon.b1{background:rgba(58,148,0,.15);border:1px solid rgba(58,148,0,.3)}
+#s5 .badge-icon.b2{background:rgba(232,128,0,.12);border:1px solid rgba(232,128,0,.25)}
+#s5 .badge-icon.b3{background:rgba(192,144,16,.12);border:1px solid rgba(192,144,16,.25)}
+#s5 .badge-name{font-family:var(--mono);font-size:12px;font-weight:500;margin-bottom:2px}
+#s5 .badge-cond{font-family:var(--mono);font-size:10px;color:var(--ink3)}
+#s5 .b1 + div .badge-name{color:var(--gl)}
+#s5 .b2 + div .badge-name{color:var(--ol)}
+#s5 .b3 + div .badge-name{color:var(--aul)}
+
+/* ══════════════════════════════════
+   SLIDE 6 — ACTIVIDADES MOODLE
+══════════════════════════════════ */
+#s6{background:#0f0d0a}
+#s6 .acts-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1rem;margin-top:2rem;
+}
+#s6 .act-card{
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;padding:1.2rem;
+}
+#s6 .act-icon{
+  width:36px;height:36px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:.8rem;
+}
+#s6 .act-name{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink);margin-bottom:.4rem}
+#s6 .act-desc{font-size:12px;color:var(--ink3);line-height:1.5}
+#s6 .act-tag{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:2px;margin-top:.6rem}
+
+/* ══════════════════════════════════
+   SLIDE 7 — EVALUACIÓN
+══════════════════════════════════ */
+#s7{background:#0c0d0a}
+#s7 .eval-wrap{
+  display:grid;grid-template-columns:1fr 1.4fr;
+  gap:4rem;align-items:start;
+}
+#s7 .nota-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+#s7 .nota-item{
+  display:flex;align-items:center;gap:1rem;
+  padding:.8rem 1rem;
+  background:var(--card);border:1px solid var(--brd);border-radius:3px;
+}
+#s7 .nota-comp{font-size:12.5px;color:var(--ink2);flex:1}
+#s7 .nota-peso{font-family:var(--mono);font-size:12px;min-width:38px;text-align:right}
+#s7 .nota-total{
+  background:#0f1e0c;border:1px solid var(--g);
+  border-radius:3px;padding:.8rem 1rem;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:.4rem;
+}
+#s7 .nota-total span:first-child{font-family:var(--mono);font-size:11px;color:var(--gl)}
+#s7 .nota-total span:last-child{font-family:var(--mono);font-size:14px;color:var(--gl);font-weight:500}
+#s7 .rub-mini{margin-top:1rem}
+#s7 .rub-head{
+  display:grid;grid-template-columns:1.6fr repeat(4,1fr);
+  gap:2px;margin-bottom:2px;
+}
+#s7 .rub-head span{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;text-align:center;padding:4px}
+#s7 .rh-crit{color:var(--ink3);text-align:left!important}
+#s7 .rh-e{color:var(--gl)} #s7 .rh-b{color:var(--bll)} #s7 .rh-s{color:var(--aul)} #s7 .rh-i{color:#e05050}
+#s7 .rub-row{
+  display:grid;grid-template-columns:1.6fr repeat(4,1fr);
+  gap:2px;margin-bottom:2px;
+}
+#s7 .rub-row span{font-size:10px;padding:6px 8px;border-radius:2px}
+#s7 .rc{background:var(--card);color:var(--ink2);font-family:var(--mono);font-size:9px}
+#s7 .re{background:rgba(58,148,0,.06);color:#5a8050}
+#s7 .rb{background:rgba(32,96,176,.06);color:#4a6080}
+#s7 .rs{background:rgba(192,144,16,.06);color:#806040}
+#s7 .ri{background:rgba(200,80,80,.06);color:#804040}
+
+/* ══════════════════════════════════
+   SLIDE 8 — HERRAMIENTAS
+══════════════════════════════════ */
+#s8{background:#090d0f}
+#s8 .bg-glow.g1{width:500px;height:500px;background:rgba(32,80,160,.08);bottom:-150px;right:-100px}
+#s8 .tools-wrap{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;margin-top:2.5rem;
+}
+#s8 .tool-group{background:var(--card);border:1px solid var(--brd);border-radius:4px;overflow:hidden}
+#s8 .tool-head{
+  padding:.8rem 1rem;border-bottom:1px solid var(--brd);
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+}
+#s8 .tool-head.moodle{color:var(--ol);background:rgba(232,128,0,.06)}
+#s8 .tool-head.h5p{color:var(--bll);background:rgba(64,144,240,.05)}
+#s8 .tool-head.codigo{color:var(--gl);background:rgba(94,196,78,.05)}
+#s8 .tool-head.external{color:var(--aul);background:rgba(232,192,64,.05)}
+#s8 .tool-items{padding:.8rem 1rem;display:flex;flex-direction:column;gap:.5rem}
+#s8 .tool-item{font-family:var(--mono);font-size:11px;color:var(--ink3);display:flex;gap:8px;align-items:center}
+#s8 .tool-item::before{content:'·';color:var(--ink3)}
+
+/* ══════════════════════════════════
+   SLIDE 9 — CRONOGRAMA
+══════════════════════════════════ */
+#s9{background:#0b0f0a}
+#s9 .crono-wrap{margin-top:2rem}
+#s9 .crono-ses{
+  display:grid;grid-template-columns:100px 1fr;
+  gap:0;margin-bottom:1.5rem;
+  background:var(--card);border:1px solid var(--brd);border-radius:4px;overflow:hidden;
+}
+#s9 .crono-side{
+  padding:1.2rem;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;border-right:1px solid var(--brd);
+  text-align:center;
+}
+#s9 .crono-num{font-family:var(--display);font-size:3rem;line-height:1}
+#s9 .crono-sem{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);margin-top:2px}
+#s9 .c1n{color:var(--g)} #s9 .c2n{color:var(--o)} #s9 .c3n{color:var(--au)} #s9 .c4n{color:var(--bl)}
+#s9 .crono-body{
+  padding:1.2rem 1.5rem;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;
+}
+#s9 .crono-col-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:.4rem;
+}
+#s9 .crono-item{font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:.2rem}
+
+/* ══════════════════════════════════
+   SLIDE 10 — PROYECTO INTEGRADOR
+══════════════════════════════════ */
+#s10{background:#080c0a}
+#s10 .proj-wrap{
+  display:grid;grid-template-columns:1fr 420px;
+  gap:5rem;align-items:center;
+}
+#s10 .req-list{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+#s10 .req-item{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:.9rem 1.1rem;
+  background:var(--card);border:1px solid var(--brd);border-radius:3px;
+}
+#s10 .req-n{
+  font-family:var(--mono);font-size:10px;
+  padding:2px 8px;border-radius:2px;
+  background:rgba(58,148,0,.1);color:var(--gl);
+  border:1px solid rgba(58,148,0,.2);flex-shrink:0;white-space:nowrap;
+}
+#s10 .req-t{font-size:12.5px;color:var(--ink2);line-height:1.5}
+#s10 .code-block{
+  background:#050907;border:1px solid var(--brd);border-radius:6px;overflow:hidden;
+}
+#s10 .code-top{
+  background:#0a0f09;padding:10px 14px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:8px;
+}
+#s10 .ct-dot{width:9px;height:9px;border-radius:50%}
+#s10 .ct-file{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-left:auto;letter-spacing:1px}
+#s10 .code-body{padding:1.4rem;font-family:var(--mono);font-size:11px;line-height:1.9}
+#s10 .ck{color:#78b4e0}
+#s10 .cv{color:#7acca0}
+#s10 .cs{color:#9ec870}
+#s10 .cn{color:var(--aul)}
+#s10 .cc{color:var(--ink3)}
+#s10 .cf{color:var(--ol)}
+
+/* ══════════════════════════════════
+   SLIDE 11 — CIERRE
+══════════════════════════════════ */
+#s11{background:var(--bg);justify-content:center;align-items:center;text-align:center}
+#s11 .bg-glow.g1{width:700px;height:700px;background:rgba(58,148,0,.09);top:50%;left:50%;transform:translate(-50%,-50%)}
+#s11 .close-super{
+  font-family:var(--display);
+  font-size:clamp(5rem,14vw,11rem);
+  line-height:.88;letter-spacing:4px;
+  color:rgba(94,196,78,.12);
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;pointer-events:none;
+  animation:rotSlow 80s linear infinite;
+}
+#s11 .close-content{position:relative;z-index:2;max-width:700px}
+#s11 .close-badge{
+  display:inline-flex;align-items:center;gap:.8rem;
+  font-family:var(--mono);font-size:11px;letter-spacing:3px;
+  color:var(--gl);border:1px solid rgba(94,196,78,.25);
+  padding:6px 18px;border-radius:2px;margin-bottom:2rem;
+}
+#s11 .close-title{
+  font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.5rem);
+  color:var(--ink);margin-bottom:1rem;line-height:1.2;
+}
+#s11 .close-title em{color:var(--gl);font-style:italic}
+#s11 .close-desc{font-size:1rem;color:var(--ink2);line-height:1.8;margin-bottom:2.5rem}
+#s11 .close-stats{
+  display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:2.5rem;
+}
+#s11 .c-stat{display:flex;flex-direction:column;gap:4px;align-items:center}
+#s11 .c-stat-n{font-family:var(--display);font-size:3rem;color:var(--gl);line-height:1}
+#s11 .c-stat-l{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:2px;text-transform:uppercase}
+#s11 .close-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+#s11 .sena-brand{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;color:var(--ink3);
+  letter-spacing:2px;text-align:center;
+}
+
+
+/* ── LAYOUT PESTAÑAS ── */
+html,body{height:100%;overflow:hidden}
+body{display:flex;flex-direction:column}
+
+/* ── BARRA SUPERIOR ── */
+.top-bar{
+  background:#060908;
+  border-bottom:1px solid #1e2a1c;
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#2e3a2a transparent;
+}
+.top-bar-brand{
+  font-family:var(--mono);font-size:12px;
+  color:#5ec44e;font-weight:700;
+  padding:0 18px;white-space:nowrap;
+  border-right:1px solid #1e2a1c;
+  letter-spacing:2px;
+}
+.tabs-row{display:flex;align-items:stretch;flex:1}
+
+/* ── PESTAÑAS PRINCIPALES ── */
+.tab-btn{
+  background:none;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:10px 16px;
+  border-bottom:3px solid transparent;
+  transition:background .15s, border-color .15s;
+  white-space:nowrap;min-width:72px;
+  position:relative;
+}
+.tab-btn:hover{background:rgba(255,255,255,.04)}
+.tab-btn.tab-active{
+  border-bottom-color:var(--tc);
+  background:rgba(255,255,255,.03);
+}
+.tab-icon{font-size:18px;line-height:1}
+.tab-label{
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;text-transform:uppercase;
+  color:#4a5248;transition:color .15s;
+}
+.tab-btn:hover .tab-label{color:#8a9288}
+.tab-btn.tab-active .tab-label{color:var(--tc)}
+
+/* ── CONTENIDO ── */
+.tabs-content{
+  flex:1;overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#2e3a2a transparent;
+}
+.tab-panel{height:100%}
+
+/* ── SLIDE dentro de panel ── */
+/* Overrides: quitar 100vh y scroll-snap, dejar height:auto */
+.slide{
+  min-height:100vh!important;
+  height:auto!important;
+  scroll-snap-align:unset!important;
+}
+
+/* ── SUB-PESTAÑAS (sesiones) ── */
+.subtabs-bar{
+  background:#0a0e09;
+  border-bottom:1px solid #1e2a1c;
+  display:flex;gap:4px;
+  padding:8px 12px;
+  position:sticky;top:0;z-index:10;
+}
+.stab-btn{
+  background:none;border:1px solid #1e2a1c;
+  border-radius:4px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;
+  color:#4a5248;padding:5px 14px;
+  transition:all .15s;
+}
+.stab-btn:hover{background:rgba(255,255,255,.04);color:#8a9288}
+.stab-btn.st-active{
+  background:rgba(255,255,255,.05);
+  border-color:var(--stc);
+  color:var(--stc);
+}
+.stab-content{padding:0}
+
+/* ── INFO Sesiones dentro de pestaña ── */
+.ses-hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)}
+.tl-item:last-child{border-bottom:none}
+.ib-item{font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)}
+.ib-item:last-child{border-bottom:none}
+
+/* ── ANIMACIONES desactivadas (todo visible) ── */
+.slide *{animation:none!important;opacity:1!important;transform:none!important}
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-brand">PY<span style="color:#f0ece0">QUEST</span></div>
+  <div class="tabs-row"><button class="tab-btn tab-active" data-tab="tab-intro" style="--tc:#5ec44e" title="Portada">
+  <span class="tab-icon">🏠</span>
+  <span class="tab-label">Portada</span>
+</button><button class="tab-btn " data-tab="tab-prop" style="--tc:#5ec44e" title="Propósito">
+  <span class="tab-icon">🎯</span>
+  <span class="tab-label">Propósito</span>
+</button><button class="tab-btn " data-tab="tab-ses" style="--tc:#5ec44e" title="Sesiones">
+  <span class="tab-icon">📚</span>
+  <span class="tab-label">Sesiones</span>
+</button><button class="tab-btn " data-tab="tab-gamif" style="--tc:#a0d840" title="Gamificación">
+  <span class="tab-icon">⚡</span>
+  <span class="tab-label">Gamificación</span>
+</button><button class="tab-btn " data-tab="tab-moodle" style="--tc:#ff7a40" title="Moodle">
+  <span class="tab-icon">🖥️</span>
+  <span class="tab-label">Moodle</span>
+</button><button class="tab-btn " data-tab="tab-eval" style="--tc:#e8c040" title="Evaluación">
+  <span class="tab-icon">📋</span>
+  <span class="tab-label">Evaluación</span>
+</button><button class="tab-btn " data-tab="tab-tools" style="--tc:#4090f0" title="Herramientas">
+  <span class="tab-icon">🔧</span>
+  <span class="tab-label">Herramientas</span>
+</button><button class="tab-btn " data-tab="tab-crono" style="--tc:#5ec44e" title="Cronograma">
+  <span class="tab-icon">📅</span>
+  <span class="tab-label">Cronograma</span>
+</button><button class="tab-btn " data-tab="tab-proj" style="--tc:#4090f0" title="Proyecto">
+  <span class="tab-icon">🚀</span>
+  <span class="tab-label">Proyecto</span>
+</button><button class="tab-btn " data-tab="tab-cierre" style="--tc:#5ec44e" title="Cierre">
+  <span class="tab-icon">🏆</span>
+  <span class="tab-label">Cierre</span>
+</button></div>
+</div>
+
+<div class="tabs-content">
+  <div class="tab-panel" id="tab-intro" style="display:block"><section class="slide" id="s0">
+  <div class="sena-bar"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+
+  <div class="slide-num">00 — PORTADA</div>
+
+  <div style="position:relative;z-index:2;max-width:55%">
+    <div class="eyebrow">Institución Educativa · Programa Desarrollo de Software</div>
+    <h1 class="big-title">
+      PY<em>QUEST</em><br>
+      CURRÍCULO
+    </h1>
+    <p style="font-family:var(--mono);font-size:13px;color:var(--ink3);margin:1.2rem 0 2rem;letter-spacing:1px" class="anim-3">
+      Variables · Constantes · Tipos de datos en Python
+    </p>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap" class="anim-4">
+      <span class="tag tag-g">4 Sesiones</span>
+      <span class="tag tag-g">8 Horas</span>
+      <span class="tag tag-o">ABP + Gamificación</span>
+      <span class="tag tag-a">Moodle 4.x</span>
+      <span class="tag tag-b">120 XP máx.</span>
+    </div>
+  </div>
+
+  <!-- Terminal animada -->
+  <div class="terminal-block">
+    <div class="term-bar">
+      <div class="term-dot" style="background:#7a3d2a"></div>
+      <div class="term-dot" style="background:#8b6914"></div>
+      <div class="term-dot" style="background:#3a7a20"></div>
+      <span class="term-title">generador_heroe.py</span>
+    </div>
+    <div class="term-body">
+      <span class="tc"># Proyecto final del módulo</span><br>
+      <span class="tv">NIVEL_MAXIMO</span> = <span class="tn">100</span><br>
+      <span class="tv">NOMBRE_JUEGO</span> = <span class="ts">"PyQuest"</span><br><br>
+      <span class="tv">nombre</span> = <span class="tf">input</span>(<span class="ts">"Nombre: "</span>)<br>
+      <span class="tv">nivel</span>  = <span class="tf">int</span>(<span class="tf">input</span>(<span class="ts">"Nivel: "</span>))<br>
+      <span class="tv">fuerza</span> = <span class="tf">float</span>(<span class="tf">input</span>(<span class="ts">"Fuerza: "</span>))<br><br>
+      <span class="tf">print</span>(<span class="ts">f"Héroe: <span style="color:#aac870">{</span><span class="tv">nombre</span><span style="color:#aac870">}</span>"</span>)<br>
+      <span class="tf">print</span>(<span class="ts">f"Nivel: <span style="color:#aac870">{</span><span class="tv">nivel</span><span style="color:#aac870">}</span>/<span style="color:#aac870">{</span><span class="tv">NIVEL_MAXIMO</span><span style="color:#aac870">}</span>"</span>)<br>
+      <span class="cursor"></span>
+    </div>
+  </div>
+</section>
+<section class="slide" id="s1">
+  <div class="bg-grid"></div>
+  <div class="slide-num">01 — CONTEXTO INSTITUCIONAL</div>
+
+  <div class="grid-2">
+    <div>
+      <div class="eyebrow">Identificación del módulo</div>
+      <h2 class="section-title">¿Dónde y para <em>quién?</em></h2>
+      <p class="body-text">
+        Módulo temático de formación técnica diseñado para aprendices del programa
+        <strong style="color:var(--ink)">Desarrollo de Software</strong> del
+        Institución Educativa, Regional Tolima. Se despliega en Moodle
+        como parte de la fase lectiva inicial de programación.
+      </p>
+      <div style="margin-top:2rem;display:flex;flex-direction:column;gap:.8rem" class="anim-4">
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:100px">Programa</span>
+          <span style="font-size:13px;color:var(--ink2)">Desarrollo de Software</span>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:100px">Centro</span>
+          <span style="font-size:13px;color:var(--ink2)">Institución Educativa</span>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:100px">Regional</span>
+          <span style="font-size:13px;color:var(--ink2)">Tolima — Colombia</span>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:100px">LMS</span>
+          <span style="font-size:13px;color:var(--ink2)">Moodle 4.x — Formato por temas</span>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:100px">Nivel</span>
+          <span style="font-size:13px;color:var(--ink2)">Técnico — Fase lectiva inicial</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem" class="anim-3">
+      <div class="context-card">
+        <div class="ctx-num">4</div>
+        <div class="ctx-label">Sesiones</div>
+        <div class="ctx-desc">Una por encuentro, 2 h cada una</div>
+      </div>
+      <div class="context-card" style="border-top-color:var(--o)">
+        <div class="ctx-num" style="color:var(--ol)">8h</div>
+        <div class="ctx-label">Duración total</div>
+        <div class="ctx-desc">2 semanas de formación virtual</div>
+      </div>
+      <div class="context-card" style="border-top-color:var(--au)">
+        <div class="ctx-num" style="color:var(--aul)">3</div>
+        <div class="ctx-label">Insignias</div>
+        <div class="ctx-desc">Declarador · Tipólogo · Data Master</div>
+      </div>
+      <div class="context-card" style="border-top-color:var(--bl)">
+        <div class="ctx-num" style="color:var(--bll)">120</div>
+        <div class="ctx-label">XP máximos</div>
+        <div class="ctx-desc">Sistema Level Up! de Moodle</div>
+      </div>
+      <div class="context-card" style="grid-column:span 2;border-top-color:var(--g)">
+        <div style="display:flex;gap:1rem;align-items:center">
+          <div>
+            <div class="ctx-num" style="font-size:2rem">ABP</div>
+            <div class="ctx-label">+ Gamificación</div>
+          </div>
+          <div class="ctx-desc" style="border-left:1px solid var(--brd);padding-left:1rem">
+            Aprendizaje Basado en Proyectos articulado con mecánicas de gamificación profunda basadas en la Self-Determination Theory
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-prop" style="display:none"><section class="slide" id="s2">
+  <div class="bg-grid"></div>
+  <div class="slide-num">02 — OBJETIVO GENERAL</div>
+
+  <div class="eyebrow">Propósito del módulo</div>
+  <h2 class="section-title" style="margin-bottom:2rem">¿Qué <em>construye</em> el aprendiz?</h2>
+
+  <div class="obj-frame">
+    <span class="obj-quote">"</span>
+    <p class="obj-text">
+      Comprender y aplicar el concepto de <strong>variables</strong>, <strong>constantes</strong> y los principales
+      <strong>tipos de datos</strong> en Python, construyendo progresivamente un mini-proyecto de perfil
+      de personaje gamificado que evidencie el manejo correcto de datos en un <strong>programa funcional</strong>.
+    </p>
+  </div>
+
+  <div class="oes">
+    <div class="oe">
+      <span class="oe-n">OE1</span>
+      <span class="oe-t">Distinguir variable, constante e identificador aplicando convenciones PEP 8 (snake_case)</span>
+    </div>
+    <div class="oe">
+      <span class="oe-n">OE2</span>
+      <span class="oe-t">Identificar y usar los tipos primitivos: int, float, str y bool con la función type()</span>
+    </div>
+    <div class="oe">
+      <span class="oe-n">OE3</span>
+      <span class="oe-t">Aplicar conversión de tipos (casting) y formatear salida con f-strings de Python 3.6+</span>
+    </div>
+    <div class="oe">
+      <span class="oe-n">OE4</span>
+      <span class="oe-t">Integrar todos los conceptos en un programa funcional documentado y publicado en GitHub</span>
+    </div>
+  </div>
+</section>
+<section class="slide" id="s4">
+  <div class="bg-glow g1"></div>
+  <div class="slide-num">04 — COMPETENCIA APLICADA</div>
+
+  <div class="eyebrow">Marco de formación Institución Educativa</div>
+  <h2 class="section-title" style="margin-bottom:1.5rem">Competencia <em>técnica</em> articulada</h2>
+
+  <div class="comp-statement">
+    <p>
+      <strong>Desarrollar programas informáticos</strong> aplicando la lógica de programación, estructuras de
+      datos básicas y paradigmas del lenguaje Python, para la automatización de procesos y la resolución
+      de problemas en contextos técnicos reales, siguiendo los <strong>estándares de calidad</strong> de la industria del software.
+    </p>
+  </div>
+
+  <div class="comp-grid">
+    <div class="saber-card ser">
+      <p class="saber-label">Saber ser</p>
+      <ul class="saber-list">
+        <li>Curiosidad frente a los errores como oportunidad</li>
+        <li>Disciplina en convenciones de código PEP 8</li>
+        <li>Responsabilidad en documentación del trabajo</li>
+        <li>Disposición colaborativa dentro del gremio</li>
+      </ul>
+    </div>
+    <div class="saber-card conocer">
+      <p class="saber-label">Saber conocer</p>
+      <ul class="saber-list">
+        <li>Variable, constante e identificador en Python</li>
+        <li>Tipos primitivos: int · float · str · bool</li>
+        <li>Conversión de tipos y función type()</li>
+        <li>input() · print() y f-strings Python 3.6+</li>
+      </ul>
+    </div>
+    <div class="saber-card hacer">
+      <p class="saber-label">Saber hacer</p>
+      <ul class="saber-list">
+        <li>Declarar variables y constantes con snake_case</li>
+        <li>Aplicar castings correctos para datos del usuario</li>
+        <li>Construir salida formateada con f-strings</li>
+        <li>Publicar código en GitHub + demo en Loom</li>
+      </ul>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-ses" style="display:none"><div class="subtabs-bar"><button class="stab-btn st-active" data-stab="st-overview" style="--stc:#5ec44e">Visión general</button><button class="stab-btn " data-stab="st-s1" style="--stc:#5ec44e">S1 Variables</button><button class="stab-btn " data-stab="st-s2" style="--stc:#ff7a40">S2 Tipos</button><button class="stab-btn " data-stab="st-s3" style="--stc:#e8c040">S3 Constantes</button><button class="stab-btn " data-stab="st-s4" style="--stc:#4090f0">S4 Proyecto</button></div><div class="stab-content"><div class="stab-panel" id="st-overview" style="display:block"><section class="slide" id="s3">
+  <div class="bg-grid"></div>
+  <div class="slide-num">03 — ESTRUCTURA DEL MÓDULO</div>
+
+  <div class="eyebrow">Mapa de sesiones</div>
+  <h2 class="section-title">4 sesiones · 2 horas <em>cada una</em></h2>
+
+  <div class="ses-track">
+    <div class="ses-card c1">
+      <p class="ses-num">Sesión 01 · Semana 1</p>
+      <p class="ses-title">Variables e<br>identificadores</p>
+      <ul class="ses-items">
+        <li>› snake_case y PEP 8</li>
+        <li>› Operador = vs ==</li>
+        <li>› Asignación múltiple</li>
+        <li>› Palabras reservadas</li>
+        <li>› mi_personaje.py</li>
+        <li>› Quiz S1 · Foro</li>
+      </ul>
+      <div class="ses-big">{ }</div>
+    </div>
+    <div class="ses-card c2">
+      <p class="ses-num">Sesión 02 · Semana 1</p>
+      <p class="ses-title">Tipos de datos<br>primitivos</p>
+      <ul class="ses-items">
+        <li>› int · float · str · bool</li>
+        <li>› Función type()</li>
+        <li>› Kahoot repaso S1</li>
+        <li>› Lección Moodle</li>
+        <li>› H5P Multiple Choice</li>
+        <li>› Quiz S2 · Hotspot</li>
+      </ul>
+      <div class="ses-big">int</div>
+    </div>
+    <div class="ses-card c3">
+      <p class="ses-num">Sesión 03 · Semana 2</p>
+      <p class="ses-title">Constantes, casting<br>y f-strings</p>
+      <ul class="ses-items">
+        <li>› UPPER_CASE PEP 8</li>
+        <li>› int() float() str() bool()</li>
+        <li>› PythonTutor · casting</li>
+        <li>› f"…{variable}…"</li>
+        <li>› Tarea ficha_heroe.py</li>
+        <li>› Wiki del Gremio</li>
+      </ul>
+      <div class="ses-big">f"…"</div>
+    </div>
+    <div class="ses-card c4">
+      <p class="ses-num">Sesión 04 · Semana 2</p>
+      <p class="ses-title">Proyecto integrador<br>y cierre</p>
+      <ul class="ses-items">
+        <li>› input() + casting</li>
+        <li>› generador_heroe.py</li>
+        <li>› GitHub + README</li>
+        <li>› Demo Loom 2–3 min</li>
+        <li>› Workshop pares</li>
+        <li>› Ceremonia badges</li>
+      </ul>
+      <div class="ses-big">>>></div>
+    </div>
+  </div>
+</section></div><div class="stab-panel" id="st-s1" style="display:none"><section class="slide visible" id="ss1" style="background:#0b0f0a">
+  <div class="bg-grid"></div>
+  <div style="position:absolute;width:400px;height:400px;background:rgba(58,148,0,.1);top:-80px;right:-60px;border-radius:50%;filter:blur(80px);pointer-events:none"></div>
+  <div class="slide-num">S1 — VARIABLES E IDENTIFICADORES</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+    <div>
+      <div class="eyebrow" style="color:var(--gl)">Semana 1 · Día 1 · 2 horas</div>
+      <h2 style="font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--ink);margin-bottom:18px">Sesión 01<br><em style="color:var(--gl)">Variables e identificadores</em></h2>
+      <div style="background:#060907;border:1px solid var(--brd);border-radius:4px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.85;margin-bottom:14px">
+        <span style="color:var(--ink3)"># mi_personaje.py — primer programa</span><br>
+        <span style="color:#7acca0">nombre_heroe</span> = <span style="color:#9ec870">"Arkon"</span>  <span style="color:var(--ink3)"># str</span><br>
+        <span style="color:#7acca0">nivel</span>        = <span style="color:var(--aul)">1</span>         <span style="color:var(--ink3)"># int</span><br>
+        <span style="color:#7acca0">gremio</span>       = <span style="color:#9ec870">"Serpientes"</span><br>
+        <span style="color:#7acca0">activo</span>       = <span style="color:var(--aul)">True</span>      <span style="color:var(--ink3)"># bool</span><br>
+        <span style="color:#7acca0">vida</span>, <span style="color:#7acca0">mana</span>   = <span style="color:var(--aul)">100</span>, <span style="color:var(--aul)">50</span>   <span style="color:var(--ink3)"># múltiple</span><br>
+        <span style="color:var(--ol)">print</span>(<span style="color:#7acca0">nombre_heroe</span>, <span style="color:#9ec870">"— Nivel"</span>, <span style="color:#7acca0">nivel</span>)
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <span class="tag tag-g">snake_case</span><span class="tag tag-g">PEP 8</span><span class="tag tag-g">Operador =</span><span class="tag tag-g">Múltiple asignación</span><span class="tag tag-a">+30 XP</span><span class="tag tag-a">📦 Declarador</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--card);border:1px solid var(--brd);border-top:3px solid var(--g);border-radius:4px;padding:18px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Secuencia (120 min)</p>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">0–10 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Apertura narrativa Genially</div><div style="font-size:11px;color:var(--ink3)">El héroe necesita variables — presentación animada</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">10–30 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Teoría variables + PEP 8</div><div style="font-size:11px;color:var(--ink3)">Página Moodle · analogía caja · demo Replit</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">30–55 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">H5P Drag Words + Fill Blanks</div><div style="font-size:11px;color:var(--ink3)">Identificadores válidos vs inválidos</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">55–85 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Reto Replit — mi_personaje.py</div><div style="font-size:11px;color:var(--ink3)">5 variables del héroe con snake_case</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">85–120 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Quiz S1 + Foro Moodle</div><div style="font-size:11px;color:var(--ink3)">10 preguntas · 2 intentos · publicación en foro</div></div></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--brd);border-radius:4px;padding:14px 16px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Producto esperado</p>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)"><strong style="color:var(--ink)">mi_personaje.py</strong> funcional con 5+ variables</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)">Quiz S1 aprobado ≥ 70 %</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0">Publicación en Foro de Moodle</div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="stab-panel" id="st-s2" style="display:none"><section class="slide visible" id="ss2" style="background:#100a06">
+  <div class="bg-grid"></div>
+  <div style="position:absolute;width:400px;height:400px;background:rgba(232,80,0,.08);top:-80px;right:-60px;border-radius:50%;filter:blur(80px);pointer-events:none"></div>
+  <div class="slide-num">S2 — TIPOS DE DATOS PRIMITIVOS</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+    <div>
+      <div class="eyebrow" style="color:var(--ol)">Semana 1 · Día 3 · 2 horas</div>
+      <h2 style="font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--ink);margin-bottom:18px">Sesión 02<br><em style="color:var(--ol)">Tipos de datos primitivos</em></h2>
+      <div style="background:#060907;border:1px solid var(--brd);border-radius:4px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.85;margin-bottom:14px">
+        <span style="color:var(--ink3)"># Los 4 tipos en Python</span><br>
+        <span style="color:#7acca0">nombre</span>   = <span style="color:#9ec870">"Arkon"</span>   <span style="color:var(--ink3)"># str</span><br>
+        <span style="color:#7acca0">nivel</span>    = <span style="color:var(--aul)">5</span>          <span style="color:var(--ink3)"># int</span><br>
+        <span style="color:#7acca0">vida</span>     = <span style="color:var(--aul)">87.5</span>      <span style="color:var(--ink3)"># float</span><br>
+        <span style="color:#7acca0">activo</span>   = <span style="color:var(--aul)">True</span>      <span style="color:var(--ink3)"># bool</span><br><br>
+        <span style="color:var(--ol)">print</span>(<span style="color:var(--ol)">type</span>(<span style="color:#7acca0">nivel</span>))  <span style="color:var(--ink3)"># &lt;class 'int'&gt;</span><br>
+        <span style="color:var(--ol)">print</span>(<span style="color:var(--ol)">type</span>(<span style="color:#7acca0">vida</span>))   <span style="color:var(--ink3)"># &lt;class 'float'&gt;</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <span class="tag tag-o">int</span><span class="tag tag-o">float</span><span class="tag tag-o">str</span><span class="tag tag-o">bool</span><span class="tag tag-o">type()</span><span class="tag tag-a">+40 XP</span><span class="tag tag-a">🔢 Tipólogo</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--card);border:1px solid var(--brd);border-top:3px solid var(--o);border-radius:4px;padding:18px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Secuencia (120 min)</p>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">0–15 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Kahoot repaso S1</div><div style="font-size:11px;color:var(--ink3)">Competencia de gremios · top-3 recibe +10 XP</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">15–45 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Lección Moodle — 4 tipos</div><div style="font-size:11px;color:var(--ink3)">Lección con preguntas intercaladas · 100 %</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">45–70 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">H5P Multiple Choice + Hotspot</div><div style="font-size:11px;color:var(--ink3)">Identificar tipos · inventario del héroe</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">70–100 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Reto Replit — 8 variables tipadas</div><div style="font-size:11px;color:var(--ink3)">2 de cada tipo con print(type())</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">100–120</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Quiz S2 + Foro reflexivo</div><div style="font-size:11px;color:var(--ink3)">12 preguntas banco aleatorio</div></div></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--brd);border-radius:4px;padding:14px 16px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Producto esperado</p>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)"><strong style="color:var(--ink)">8 variables tipadas</strong> (2 por cada tipo)</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)">Lección completada al 100 %</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0">Insignia 🔢 Tipólogo</div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="stab-panel" id="st-s3" style="display:none"><section class="slide visible" id="ss3" style="background:#0e0c00">
+  <div class="bg-grid"></div>
+  <div style="position:absolute;width:400px;height:400px;background:rgba(192,144,16,.08);top:-80px;right:-60px;border-radius:50%;filter:blur(80px);pointer-events:none"></div>
+  <div class="slide-num">S3 — CONSTANTES, CASTING Y F-STRINGS</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+    <div>
+      <div class="eyebrow" style="color:var(--aul)">Semana 2 · Día 1 · 2 horas</div>
+      <h2 style="font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--ink);margin-bottom:18px">Sesión 03<br><em style="color:var(--aul)">Constantes, casting y f-strings</em></h2>
+      <div style="background:#060907;border:1px solid var(--brd);border-radius:4px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.85;margin-bottom:14px">
+        <span style="color:var(--ink3)"># UPPER_CASE = constantes PEP 8</span><br>
+        <span style="color:var(--aul)">NIVEL_MAXIMO</span>  = <span style="color:var(--aul)">100</span><br>
+        <span style="color:var(--aul)">VIDA_BASE</span>     = <span style="color:var(--aul)">100.0</span><br><br>
+        <span style="color:var(--ink3)"># Casting explícito</span><br>
+        <span style="color:#7acca0">numero</span> = <span style="color:var(--ol)">int</span>(<span style="color:#9ec870">"42"</span>)  <span style="color:var(--ink3)"># str→int</span><br><br>
+        <span style="color:var(--ink3)"># f-strings</span><br>
+        <span style="color:var(--ol)">print</span>(<span style="color:#9ec870">f"Nivel: <span style="color:#d4c060">{nivel}</span>/<span style="color:#d4c060">{NIVEL_MAXIMO}</span>"</span>)
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <span class="tag tag-a">UPPER_CASE</span><span class="tag tag-a">int()</span><span class="tag tag-a">float()</span><span class="tag tag-a">f-strings</span><span class="tag tag-a">+40 XP</span><span style="font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:2px;border:1px solid rgba(255,122,64,.3);color:var(--ol);background:rgba(255,122,64,.08)">Tarea 15 %</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--card);border:1px solid var(--brd);border-top:3px solid var(--au);border-radius:4px;padding:18px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Secuencia (120 min)</p>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">0–10 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Apertura — problema real</div><div style="font-size:11px;color:var(--ink3)">¿Cómo guardar un valor que nunca cambia?</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">10–30 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Constantes UPPER_CASE</div><div style="font-size:11px;color:var(--ink3)">Página Moodle · diferencia variable vs constante</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">30–60 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Casting + PythonTutor</div><div style="font-size:11px;color:var(--ink3)">int() float() str() bool() · visualizar paso a paso</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">60–85 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">F-strings + H5P Fill Blanks</div><div style="font-size:11px;color:var(--ink3)">f"…{var}…" · ejercicio interactivo</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">85–120</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Tarea + Wiki del Gremio</div><div style="font-size:11px;color:var(--ink3)">ficha_heroe.py · constantes del proyecto</div></div></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--brd);border-radius:4px;padding:14px 16px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Producto esperado</p>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)"><strong style="color:var(--ink)">ficha_heroe.py</strong> con const + casting + f-str</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)">Wiki del Gremio completado</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0">Tarea entregada — 15 % nota</div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="stab-panel" id="st-s4" style="display:none"><section class="slide visible" id="ss4" style="background:#07090f">
+  <div class="bg-grid"></div>
+  <div style="position:absolute;width:400px;height:400px;background:rgba(32,96,176,.1);top:-80px;right:-60px;border-radius:50%;filter:blur(80px);pointer-events:none"></div>
+  <div class="slide-num">S4 — PROYECTO INTEGRADOR</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+    <div>
+      <div class="eyebrow" style="color:var(--bll)">Semana 2 · Día 3 · 2 horas</div>
+      <h2 style="font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--ink);margin-bottom:18px">Sesión 04<br><em style="color:var(--bll)">Proyecto integrador</em></h2>
+      <div style="background:#060907;border:1px solid var(--brd);border-radius:4px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.85;margin-bottom:14px">
+        <span style="color:var(--ink3)"># generador_heroe.py — proyecto final</span><br>
+        <span style="color:#7acca0">nombre</span>  = <span style="color:var(--ol)">input</span>(<span style="color:#9ec870">"Nombre: "</span>)<br>
+        <span style="color:#7acca0">nivel</span>   = <span style="color:#78b4e0">int</span>(<span style="color:var(--ol)">input</span>(<span style="color:#9ec870">"Nivel: "</span>))<br>
+        <span style="color:#7acca0">fuerza</span>  = <span style="color:#78b4e0">float</span>(<span style="color:var(--ol)">input</span>(<span style="color:#9ec870">"Fuerza: "</span>))<br>
+        <span style="color:#7acca0">activo</span>  = <span style="color:#78b4e0">bool</span>(<span style="color:#78b4e0">int</span>(<span style="color:var(--ol)">input</span>(<span style="color:#9ec870">"Activo: "</span>)))<br><br>
+        <span style="color:var(--ol)">print</span>(<span style="color:#9ec870">f"Héroe: <span style="color:#88c8f0">{nombre}</span> | Nivel: <span style="color:#88c8f0">{nivel}</span>/<span style="color:#88c8f0">{NIVEL_MAXIMO}</span>"</span>)
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <span class="tag tag-b">input()+casting</span><span class="tag tag-b">GitHub</span><span class="tag tag-b">Loom</span><span class="tag tag-b">Workshop</span><span class="tag tag-a">+50 XP</span><span style="font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:2px;border:1px solid rgba(255,122,64,.3);color:var(--ol);background:rgba(255,122,64,.08)">Proyecto 30 %</span><span style="font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:2px;border:1px solid rgba(232,192,64,.3);color:var(--aul);background:rgba(232,192,64,.08)">🏆 Data Master</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--card);border:1px solid var(--brd);border-top:3px solid var(--bl);border-radius:4px;padding:18px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Secuencia (120 min)</p>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">0–25 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Demo input() + Q&A</div><div style="font-size:11px;color:var(--ink3)">input() siempre str → casting obligatorio</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">25–80 min</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Construcción autónoma</div><div style="font-size:11px;color:var(--ink3)">generador_heroe.py supervisado</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">80–100</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">GitHub + Loom demo</div><div style="font-size:11px;color:var(--ink3)">Subir repo · grabar video 2–3 min</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--brd)"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">100–115</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Workshop — revisión de par</div><div style="font-size:11px;color:var(--ink3)">Mínimo 3 comentarios con rúbrica</div></div></div>
+          <div style="display:flex;gap:12px;padding:8px 0"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);min-width:68px;border:1px solid var(--brd);border-radius:3px;padding:2px 6px;text-align:center;height:fit-content;margin-top:2px;flex-shrink:0">115–120</span><div><div style="font-size:12.5px;color:var(--ink);font-weight:500">Ceremonia de cierre 🏆</div><div style="font-size:11px;color:var(--ink3)">Insignia Data Master · foro reflexivo</div></div></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--brd);border-radius:4px;padding:14px 16px">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Producto esperado</p>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)"><strong style="color:var(--ink)">generador_heroe.py</strong> + GitHub + README</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--brd)">Video Loom 2–3 min · revisión de par</div>
+        <div style="font-size:12px;color:var(--ink2);padding:4px 0">Proyecto final — 30 % nota</div>
+      </div>
+    </div>
+  </div>
+</section></div></div></div><div class="tab-panel" id="tab-gamif" style="display:none"><section class="slide" id="s5">
+  <div class="bg-grid"></div>
+  <div class="slide-num">05 — SISTEMA DE GAMIFICACIÓN</div>
+
+  <div class="gamif-wrap">
+    <div>
+      <div class="eyebrow">PyQuest XP System</div>
+      <h2 class="section-title">Progresión de <em>experiencia</em></h2>
+      <p class="body-text" style="margin-bottom:1.5rem">
+        Sistema basado en la Self-Determination Theory (SDT): autonomía, competencia y pertenencia.
+        El XP no es cosmético — es la arquitectura de la motivación del curso.
+      </p>
+
+      <div class="xp-table">
+        <div class="xp-row r1">
+          <span class="xp-ses">S1</span>
+          <div class="xp-bar-wrap"><div class="xp-bar"></div></div>
+          <span class="xp-val">30 XP</span>
+        </div>
+        <div class="xp-row r2">
+          <span class="xp-ses">S2</span>
+          <div class="xp-bar-wrap"><div class="xp-bar"></div></div>
+          <span class="xp-val">55 XP</span>
+        </div>
+        <div class="xp-row r3">
+          <span class="xp-ses">S3</span>
+          <div class="xp-bar-wrap"><div class="xp-bar"></div></div>
+          <span class="xp-val">80 XP</span>
+        </div>
+        <div class="xp-row r4">
+          <span class="xp-ses">S4</span>
+          <div class="xp-bar-wrap"><div class="xp-bar"></div></div>
+          <span class="xp-val">120 XP</span>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--card);border:1px solid var(--brd);border-radius:4px" class="anim-5">
+        <p class="mono-label">Mecánicas de juego</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem">
+          <span class="tag tag-g">Gremios (4–5 aprendices)</span>
+          <span class="tag tag-g">Plugin Level Up!</span>
+          <span class="tag tag-o">Kahoot competencia</span>
+          <span class="tag tag-a">Wiki colaborativo</span>
+          <span class="tag tag-b">Workshop pares</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="anim-3">
+      <p class="mono-label" style="margin-bottom:1rem">Insignias Moodle (Badges)</p>
+      <div class="badges">
+        <div class="badge-item">
+          <div class="badge-icon b1">📦</div>
+          <div>
+            <div class="badge-name b1" style="color:var(--gl)">Declarador</div>
+            <div class="badge-cond">XP sesión 1 ≥ 25 · Variables correctas en mi_personaje.py</div>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon b2">🔢</div>
+          <div>
+            <div class="badge-name" style="color:var(--ol)">Tipólogo</div>
+            <div class="badge-cond">XP acumulado ≥ 55 · 4 tipos de datos aplicados</div>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon b3">🏆</div>
+          <div>
+            <div class="badge-name" style="color:var(--aul)">Data Master</div>
+            <div class="badge-cond">XP total ≥ 80 · Proyecto final ≥ 4.0</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--card);border:1px solid var(--brd);border-radius:4px">
+        <p class="mono-label">Distribución de XP por actividad</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.7rem">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">Quiz completado</div><div style="font-family:var(--mono);font-size:11px;color:var(--gl);text-align:right">+10 XP</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">Tarea a tiempo</div><div style="font-family:var(--mono);font-size:11px;color:var(--gl);text-align:right">+15 XP</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">Reto de sesión</div><div style="font-family:var(--mono);font-size:11px;color:var(--gl);text-align:right">+20 XP</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">Revisión de par</div><div style="font-family:var(--mono);font-size:11px;color:var(--gl);text-align:right">+10 XP</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">Proyecto final</div><div style="font-family:var(--mono);font-size:11px;color:var(--gl);text-align:right">+30 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-moodle" style="display:none"><section class="slide" id="s6">
+  <div class="bg-grid"></div>
+  <div class="slide-num">06 — ACTIVIDADES EN MOODLE</div>
+
+  <div class="eyebrow">Configuración LMS</div>
+  <h2 class="section-title">Actividades <em>propias</em> de Moodle</h2>
+
+  <div class="acts-grid">
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#ff7a40" stroke-width="1.2"/><path d="M6 9h6M6 12h4" stroke="#ff7a40" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <p class="act-name">Página Moodle</p>
+      <p class="act-desc">Contenido teórico con recursos embebidos (Replit, Genially, videos)</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S1 · S2 · S3</span>
+    </div>
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#ff7a40" stroke-width="1.2"/><circle cx="9" cy="9" r="3" stroke="#ff7a40" stroke-width="1.2"/></svg>
+      </div>
+      <p class="act-name">Cuestionario</p>
+      <p class="act-desc">Banco aleatorio · 2 intentos · Retroalimentación inmediata por pregunta</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S1 (10 Qs) · S2 (12 Qs)</span>
+    </div>
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 3h12v12H3z" stroke="#ff7a40" stroke-width="1.2" rx="2"/><path d="M3 8h12" stroke="#ff7a40" stroke-width="1"/></svg>
+      </div>
+      <p class="act-name">Lección Moodle</p>
+      <p class="act-desc">Contenido secuencial con preguntas intercaladas · Debe completarse al 100 %</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S2 — 4 tipos primitivos</span>
+    </div>
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="4" width="14" height="10" rx="2" stroke="#ff7a40" stroke-width="1.2"/><path d="M6 8l2 2 4-3" stroke="#ff7a40" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <p class="act-name">Tarea</p>
+      <p class="act-desc">Entrega de archivo .py + captura · Evaluada con rúbrica adjunta en Moodle</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S1 · S2 · S3 · S4</span>
+    </div>
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3a6 6 0 1 0 0 12A6 6 0 0 0 9 3z" stroke="#ff7a40" stroke-width="1.2"/><path d="M9 7v4M7 11h4" stroke="#ff7a40" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <p class="act-name">Taller (Workshop)</p>
+      <p class="act-desc">Revisión de pares con rúbrica · Mínimo 3 comentarios específicos por proyecto</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S3 y S4</span>
+    </div>
+    <div class="act-card">
+      <div class="act-icon" style="background:rgba(232,128,0,.1);border:1px solid rgba(232,128,0,.2)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h8M3 13h10" stroke="#ff7a40" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <p class="act-name">Wiki · Foro · Base datos</p>
+      <p class="act-desc">Wiki colaborativo del Gremio · Foros de sesión · Galería de proyectos finales</p>
+      <span class="act-tag" style="background:rgba(232,128,0,.1);color:var(--ol);border:1px solid rgba(232,128,0,.2)">S1–S4</span>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-eval" style="display:none"><section class="slide" id="s7">
+  <div class="bg-grid"></div>
+  <div class="slide-num">07 — EVALUACIÓN Y RÚBRICAS</div>
+
+  <div class="eval-wrap">
+    <div>
+      <div class="eyebrow">Distribución de nota</div>
+      <h2 class="section-title" style="font-size:2rem;margin-bottom:1rem">Peso de cada <em>instrumento</em></h2>
+
+      <div class="nota-list">
+        <div class="nota-item"><span class="nota-comp"><span style="font-family:var(--mono);font-size:10px;color:var(--gl);margin-right:8px">S1</span>Quiz Variables · Reto Replit</span><span class="nota-peso" style="color:var(--gl)">20 %</span></div>
+        <div class="nota-item"><span class="nota-comp"><span style="font-family:var(--mono);font-size:10px;color:var(--ol);margin-right:8px">S2</span>Quiz Tipos · Reto 8 variables</span><span class="nota-peso" style="color:var(--ol)">20 %</span></div>
+        <div class="nota-item"><span class="nota-comp"><span style="font-family:var(--mono);font-size:10px;color:var(--aul);margin-right:8px">S3</span>Tarea ficha_heroe.py · Wiki</span><span class="nota-peso" style="color:var(--aul)">20 %</span></div>
+        <div class="nota-item"><span class="nota-comp"><span style="font-family:var(--mono);font-size:10px;color:var(--bll);margin-right:8px">S4</span>Proyecto final integrador</span><span class="nota-peso" style="color:var(--bll)">30 %</span></div>
+        <div class="nota-item"><span class="nota-comp"><span style="font-family:var(--mono);font-size:10px;color:var(--ink3);margin-right:8px">S1–4</span>Participación en foros</span><span class="nota-peso" style="color:var(--ink3)">10 %</span></div>
+        <div class="nota-total">
+          <span>TOTAL DEL MÓDULO</span>
+          <span>100 %</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="anim-3">
+      <p class="mono-label" style="margin-bottom:.8rem">Rúbrica R1 — Tareas semanales S1·S2·S3</p>
+      <div class="rub-mini">
+        <div class="rub-head">
+          <span class="rh-crit">Criterio</span>
+          <span class="rh-e">Exc. 5.0</span>
+          <span class="rh-b">Bien 4.0</span>
+          <span class="rh-s">Bás. 3.0</span>
+          <span class="rh-i">Ins. &lt;3</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Funcionalidad</span>
+          <span class="re">Sin errores, todos los req.</span>
+          <span class="rb">Req. principales, error menor</span>
+          <span class="rs">Parcial, algunos req.</span>
+          <span class="ri">No ejecuta</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Calidad código</span>
+          <span class="re">Limpio, comentado, PEP 8</span>
+          <span class="rb">Legible, comentarios básicos</span>
+          <span class="rs">Funciona, difícil de leer</span>
+          <span class="ri">Sin estructura</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Conceptos S</span>
+          <span class="re">Todos aplicados correctamente</span>
+          <span class="rb">Mayoría correctos</span>
+          <span class="rs">Algunos con errores</span>
+          <span class="ri">Sin comprensión</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Entrega puntual</span>
+          <span class="re">Antes del plazo</span>
+          <span class="rb">En el plazo</span>
+          <span class="rs">Hasta 24 h tarde</span>
+          <span class="ri">No entregado</span>
+        </div>
+      </div>
+
+      <p class="mono-label" style="margin-top:1.5rem;margin-bottom:.8rem">Rúbrica R2 — Proyecto final S4</p>
+      <div class="rub-mini">
+        <div class="rub-head">
+          <span class="rh-crit">Criterio</span>
+          <span class="rh-e">Exc. 5.0</span>
+          <span class="rh-b">Bien 4.0</span>
+          <span class="rh-s">Bás. 3.0</span>
+          <span class="rh-i">Ins. &lt;3</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Integración</span>
+          <span class="re">Todos los conceptos S1-S4</span>
+          <span class="rb">Mayoría integrados</span>
+          <span class="rs">2–3 conceptos presentes</span>
+          <span class="ri">Sin integración</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Documentación</span>
+          <span class="re">README + docstrings completos</span>
+          <span class="rb">README y comentarios básicos</span>
+          <span class="rs">README mínimo</span>
+          <span class="ri">Sin documentación</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Demo Loom</span>
+          <span class="re">2–3 min, explica todo</span>
+          <span class="rb">Funcionalidad principal</span>
+          <span class="rs">Muy corto, sin explicación</span>
+          <span class="ri">Sin video</span>
+        </div>
+        <div class="rub-row">
+          <span class="rc">Revisión par</span>
+          <span class="re">3+ comentarios con rúbrica</span>
+          <span class="rb">2 puntos claros</span>
+          <span class="rs">Comentario genérico</span>
+          <span class="ri">No realizada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-tools" style="display:none"><section class="slide" id="s8">
+  <div class="bg-glow g1"></div>
+  <div class="slide-num">08 — HERRAMIENTAS Y TECNOLOGÍAS</div>
+
+  <div class="eyebrow">Stack tecnológico del módulo</div>
+  <h2 class="section-title">Plataforma LMS + herramientas <em>externas</em></h2>
+
+  <div class="tools-wrap">
+    <div class="tool-group">
+      <div class="tool-head moodle">Moodle 4.x — Nativas</div>
+      <div class="tool-items">
+        <div class="tool-item">Cuestionarios (banco aleatorio)</div>
+        <div class="tool-item">Lección con preguntas</div>
+        <div class="tool-item">Tarea con rúbrica adjunta</div>
+        <div class="tool-item">Workshop (revisión pares)</div>
+        <div class="tool-item">Wiki colaborativo</div>
+        <div class="tool-item">Foro de novedades</div>
+        <div class="tool-item">Base de datos (galería)</div>
+        <div class="tool-item">Badges + Level Up!</div>
+        <div class="tool-item">Restricciones de acceso</div>
+      </div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-head h5p">H5P — Interactivas</div>
+      <div class="tool-items">
+        <div class="tool-item">Drag the Words</div>
+        <div class="tool-item">Fill in the Blanks</div>
+        <div class="tool-item">Multiple Choice</div>
+        <div class="tool-item">Image Hotspot</div>
+        <div class="tool-item">Sortable (ordenar)</div>
+        <div class="tool-item">True / False</div>
+        <div class="tool-item">Embed en páginas Moodle</div>
+      </div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-head codigo">Código — IDE y análisis</div>
+      <div class="tool-items">
+        <div class="tool-item">Replit (IDE online)</div>
+        <div class="tool-item">PythonTutor (trazabilidad)</div>
+        <div class="tool-item">GitHub (repositorios)</div>
+        <div class="tool-item">GitHub Education</div>
+        <div class="tool-item">Codewars (katas)</div>
+        <div class="tool-item">Python 3.x oficial</div>
+      </div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-head external">Externas — Multimedia</div>
+      <div class="tool-items">
+        <div class="tool-item">Genially (presentaciones)</div>
+        <div class="tool-item">Canva (diseño visual)</div>
+        <div class="tool-item">Kahoot (competencia)</div>
+        <div class="tool-item">Quizizz (práctica)</div>
+        <div class="tool-item">Loom (video demo)</div>
+        <div class="tool-item">Padlet (muros)</div>
+        <div class="tool-item">Mentimeter (cierre)</div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-crono" style="display:none"><section class="slide" id="s9">
+  <div class="bg-grid"></div>
+  <div class="slide-num">09 — CRONOGRAMA DE IMPLEMENTACIÓN</div>
+
+  <div class="eyebrow">Planificación semanal</div>
+  <h2 class="section-title" style="margin-bottom:1.5rem">2 semanas · 4 encuentros <em>sincrónicos</em></h2>
+
+  <div class="crono-wrap">
+    <div class="crono-ses">
+      <div class="crono-side">
+        <div class="crono-num c1n">S1</div>
+        <div class="crono-sem">Sem 1 · Día 1</div>
+      </div>
+      <div class="crono-body">
+        <div>
+          <p class="crono-col-label">Actividades</p>
+          <p class="crono-item">Apertura narrativa Genially</p>
+          <p class="crono-item">Teoría variables + H5P</p>
+          <p class="crono-item">Reto Replit mi_personaje.py</p>
+          <p class="crono-item">Quiz S1 + Foro</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Responsables</p>
+          <p class="crono-item">Instructor (apertura)</p>
+          <p class="crono-item">Aprendiz (práctica)</p>
+          <p class="crono-item">Aprendiz (reto)</p>
+          <p class="crono-item">Aprendiz (evaluación)</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Productos</p>
+          <p class="crono-item">mi_personaje.py funcional</p>
+          <p class="crono-item">Quiz ≥ 70 %</p>
+          <p class="crono-item">Publicación en foro</p>
+          <p class="crono-item">Insignia 📦 Declarador</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crono-ses">
+      <div class="crono-side">
+        <div class="crono-num c2n">S2</div>
+        <div class="crono-sem">Sem 1 · Día 3</div>
+      </div>
+      <div class="crono-body">
+        <div>
+          <p class="crono-col-label">Actividades</p>
+          <p class="crono-item">Kahoot repaso S1</p>
+          <p class="crono-item">Lección 4 tipos + H5P</p>
+          <p class="crono-item">Reto Replit 8 variables</p>
+          <p class="crono-item">Quiz S2 + Foro</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Responsables</p>
+          <p class="crono-item">Instructor + Aprendices</p>
+          <p class="crono-item">Aprendiz (lección)</p>
+          <p class="crono-item">Aprendiz (reto)</p>
+          <p class="crono-item">Aprendiz (evaluación)</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Productos</p>
+          <p class="crono-item">Lección 100 % completa</p>
+          <p class="crono-item">8 variables tipadas</p>
+          <p class="crono-item">Quiz S2 aprobado</p>
+          <p class="crono-item">Insignia 🔢 Tipólogo</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crono-ses">
+      <div class="crono-side">
+        <div class="crono-num c3n">S3</div>
+        <div class="crono-sem">Sem 2 · Día 1</div>
+      </div>
+      <div class="crono-body">
+        <div>
+          <p class="crono-col-label">Actividades</p>
+          <p class="crono-item">Constantes + PythonTutor</p>
+          <p class="crono-item">Casting + f-strings H5P</p>
+          <p class="crono-item">Tarea ficha_heroe.py</p>
+          <p class="crono-item">Wiki Gremio constantes</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Responsables</p>
+          <p class="crono-item">Instructor (demo)</p>
+          <p class="crono-item">Aprendiz (práctica)</p>
+          <p class="crono-item">Aprendiz (tarea)</p>
+          <p class="crono-item">Gremio (colaboración)</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Productos</p>
+          <p class="crono-item">ficha_heroe.py con casting</p>
+          <p class="crono-item">Wiki del Gremio completo</p>
+          <p class="crono-item">Tarea entregada 15 %</p>
+          <p class="crono-item">+40 XP acumulados</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crono-ses">
+      <div class="crono-side">
+        <div class="crono-num c4n">S4</div>
+        <div class="crono-sem">Sem 2 · Día 3</div>
+      </div>
+      <div class="crono-body">
+        <div>
+          <p class="crono-col-label">Actividades</p>
+          <p class="crono-item">Demo input() + casting</p>
+          <p class="crono-item">Construir generador_heroe</p>
+          <p class="crono-item">GitHub + Loom demo</p>
+          <p class="crono-item">Workshop + Ceremonia</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Responsables</p>
+          <p class="crono-item">Instructor (demo)</p>
+          <p class="crono-item">Aprendiz (construcción)</p>
+          <p class="crono-item">Aprendiz (entrega)</p>
+          <p class="crono-item">Aprendices + Instructor</p>
+        </div>
+        <div>
+          <p class="crono-col-label">Productos</p>
+          <p class="crono-item">generador_heroe.py + GitHub</p>
+          <p class="crono-item">Video Loom 2–3 min</p>
+          <p class="crono-item">Revisión de par completa</p>
+          <p class="crono-item">🏆 Insignia Data Master</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-proj" style="display:none"><section class="slide" id="s10">
+  <div class="bg-grid"></div>
+  <div class="slide-num">10 — PROYECTO INTEGRADOR</div>
+
+  <div class="proj-wrap">
+    <div>
+      <div class="eyebrow">Evidencia central del módulo</div>
+      <h2 class="section-title">generador_<em>heroe</em>.py</h2>
+      <p class="body-text" style="margin-bottom:1.5rem">
+        Programa que integra todos los conceptos del módulo. El aprendiz lo construye en la
+        sesión 4 y lo publica en GitHub con video demo y revisión de pares.
+      </p>
+      <ul class="req-list">
+        <li class="req-item"><span class="req-n">R1</span><span class="req-t">3 constantes en UPPER_CASE: NIVEL_MAXIMO · VIDA_BASE · NOMBRE_JUEGO</span></li>
+        <li class="req-item"><span class="req-n">R2</span><span class="req-t">6+ variables con los 4 tipos primitivos representados en snake_case</span></li>
+        <li class="req-item"><span class="req-n">R3</span><span class="req-t">3 usos de input() con casting explícito al tipo correcto</span></li>
+        <li class="req-item"><span class="req-n">R4</span><span class="req-t">Ficha del personaje impresa con f-strings (no concatenación)</span></li>
+        <li class="req-item"><span class="req-n">R5</span><span class="req-t">Código comentado por secciones + README en GitHub</span></li>
+        <li class="req-item"><span class="req-n">R6</span><span class="req-t">Video demo Loom de 2–3 min con ejecución completa</span></li>
+        <li class="req-item"><span class="req-n">R7</span><span class="req-t">Revisión de par en Workshop Moodle con mínimo 3 comentarios</span></li>
+      </ul>
+    </div>
+
+    <div class="code-block">
+      <div class="code-top">
+        <div class="ct-dot" style="background:#7a3d2a"></div>
+        <div class="ct-dot" style="background:#8b6914"></div>
+        <div class="ct-dot" style="background:#3a7a20"></div>
+        <span class="ct-file">generador_heroe.py</span>
+      </div>
+      <div class="code-body">
+<span class="cc"># Sección 1 — Constantes</span><br>
+<span class="cv">NIVEL_MAXIMO</span>  = <span class="cn">100</span><br>
+<span class="cv">VIDA_BASE</span>     = <span class="cn">100.0</span><br>
+<span class="cv">NOMBRE_JUEGO</span>  = <span class="cs">"PyQuest"</span><br><br>
+<span class="cc"># Sección 2 — Entrada + casting</span><br>
+<span class="cv">nombre</span>  = <span class="cf">input</span>(<span class="cs">"Nombre: "</span>)<br>
+<span class="cv">nivel</span>   = <span class="ck">int</span>(<span class="cf">input</span>(<span class="cs">"Nivel: "</span>))<br>
+<span class="cv">fuerza</span>  = <span class="ck">float</span>(<span class="cf">input</span>(<span class="cs">"Fuerza: "</span>))<br>
+<span class="cv">activo</span>  = <span class="ck">bool</span>(<span class="ck">int</span>(<span class="cf">input</span>(<span class="cs">"Activo? "</span>)))<br><br>
+<span class="cc"># Sección 3 — Salida con f-strings</span><br>
+<span class="cf">print</span>(<span class="cs">f"""<br>
+╔═ FICHA DE PERSONAJE ═╗<br>
+  Juego  : </span><span style="color:#aac870">{</span><span class="cv">NOMBRE_JUEGO</span><span style="color:#aac870">}</span><span class="cs"><br>
+  Héroe  : </span><span style="color:#aac870">{</span><span class="cv">nombre</span><span style="color:#aac870">}</span><span class="cs"><br>
+  Nivel  : </span><span style="color:#aac870">{</span><span class="cv">nivel</span><span style="color:#aac870">}</span><span class="cs"> / </span><span style="color:#aac870">{</span><span class="cv">NIVEL_MAXIMO</span><span style="color:#aac870">}</span><span class="cs"><br>
+  Fuerza : </span><span style="color:#aac870">{</span><span class="cv">fuerza</span><span style="color:#aac870">:.1f</span><span style="color:#aac870">}</span><span class="cs"><br>
+  Activo : </span><span style="color:#aac870">{</span><span class="cv">activo</span><span style="color:#aac870">}</span><span class="cs"><br>
+╚══════════════════════╝"""</span>)
+      </div>
+    </div>
+  </div>
+</section></div><div class="tab-panel" id="tab-cierre" style="display:none"><section class="slide" id="s11">
+  <div class="bg-glow g1"></div>
+  <div class="close-super">PYQUEST</div>
+
+  <div class="close-content">
+    <div class="close-badge">
+      <span>✓</span> Currículo completado
+    </div>
+    <h2 class="close-title">
+      Un módulo construido para<br><em>aprender haciendo</em>
+    </h2>
+    <p class="close-desc">
+      PyQuest articula ABP, gamificación profunda y Moodle en un solo recorrido coherente
+      donde cada sesión entrega un producto real, cada XP es ganado y cada badge es merecido.
+    </p>
+    <div class="close-stats">
+      <div class="c-stat"><span class="c-stat-n">4</span><span class="c-stat-l">Sesiones</span></div>
+      <div class="c-stat"><span class="c-stat-n" style="color:var(--ol)">8h</span><span class="c-stat-l">Total</span></div>
+      <div class="c-stat"><span class="c-stat-n" style="color:var(--aul)">12</span><span class="c-stat-l">Archivos PPTX</span></div>
+      <div class="c-stat"><span class="c-stat-n" style="color:var(--bll)">120</span><span class="c-stat-l">XP máx.</span></div>
+      <div class="c-stat"><span class="c-stat-n">3</span><span class="c-stat-l">Insignias</span></div>
+    </div>
+    <div class="close-tags">
+      <span class="tag tag-g">Material de apoyo × 4</span>
+      <span class="tag tag-g">Ejercicios × 4</span>
+      <span class="tag tag-o">Instrumentos × 4</span>
+      <span class="tag tag-a">Rúbricas R1 y R2</span>
+      <span class="tag tag-b">Anuncios × 4</span>
+      <span class="tag tag-b">Cronograma detallado</span>
+      <span class="tag tag-g">Curso LMS navegable</span>
+      <span class="tag tag-o">Descripción general HTML</span>
+    </div>
+  </div>
+
+  <div class="sena-brand">
+    Institución Educativa · Programa Desarrollo de Software · 2025–2026
+  </div>
+</section></div>
+</div>
+
+<script>
+
+// ── PESTAÑAS PRINCIPALES ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tid = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    btn.classList.add('tab-active');
+    document.getElementById(tid).style.display = 'block';
+    // Scroll al top del panel
+    document.querySelector('.tabs-content').scrollTop = 0;
+  });
+});
+
+// ── SUB-PESTAÑAS (sesiones) ──
+document.querySelectorAll('.stab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sid = btn.dataset.stab;
+    const parent = btn.closest('.tab-panel');
+    parent.querySelectorAll('.stab-btn').forEach(b => b.classList.remove('st-active'));
+    parent.querySelectorAll('.stab-panel').forEach(p => p.style.display = 'none');
+    btn.classList.add('st-active');
+    document.getElementById(sid).style.display = 'block';
+    document.querySelector('.tabs-content').scrollTop = 0;
+  });
+});
+
+// ── Atajos de teclado ──
+document.addEventListener('keydown', e => {
+  const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+  const cur = tabs.findIndex(t => t.classList.contains('tab-active'));
+  if (e.key === 'ArrowRight' && cur < tabs.length-1) tabs[cur+1].click();
+  if (e.key === 'ArrowLeft'  && cur > 0)            tabs[cur-1].click();
+});
+
+</script>
+</body>
+</html>
