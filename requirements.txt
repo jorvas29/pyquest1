@@ -1,0 +1,7 @@
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+# Opcionales: si están instalados se suman automáticamente al ensamble
+# xgboost>=2.0
+# lightgbm>=4.0
+pytest>=8
