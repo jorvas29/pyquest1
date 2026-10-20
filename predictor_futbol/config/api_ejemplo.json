@@ -1,0 +1,14 @@
+{
+  "_comentario": "Ejemplo para la API v4 de football-data.org (no probado en vivo). Pon tu clave en la variable de entorno FOOTBALL_DATA_TOKEN. Esta API no da córners: el mercado de córners quedará desactivado.",
+  "url": "https://api.football-data.org/v4/competitions/PD/matches?season=2025&status=FINISHED",
+  "ruta_registros": ["matches"],
+  "cabecera_token": "X-Auth-Token",
+  "variable_token": "FOOTBALL_DATA_TOKEN",
+  "mapeo": {
+    "utcDate": "fecha",
+    "homeTeam.name": "local",
+    "awayTeam.name": "visitante",
+    "score.fullTime.home": "goles_local",
+    "score.fullTime.away": "goles_visitante"
+  }
+}
